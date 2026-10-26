@@ -300,6 +300,10 @@
               "title": "Map Style",
               "type": "string",
               "description": "Show events as points coloured by event type, or as EarthRanger event icons.",
+              "enumNames": [
+                "Points",
+                "Icons"
+              ],
               "oneOf": [
                 {
                   "const": "points",
@@ -350,6 +354,19 @@
                   "updated"
                 ],
                 "type": "string",
+                "enumNames": [
+                  "Title",
+                  "Category",
+                  "Date",
+                  "State",
+                  "Priority",
+                  "Reported by",
+                  "Location",
+                  "Details",
+                  "Notes",
+                  "Created",
+                  "Last updated"
+                ],
                 "oneOf": [
                   {
                     "const": "title",
@@ -556,24 +573,7 @@
         "ui:order": [
           "default_columns",
           "show_icons"
-        ],
-        "default_columns": {
-          "items": {
-            "ui:enumNames": [
-              "Title",
-              "Category",
-              "Date",
-              "State",
-              "Priority",
-              "Reported by",
-              "Location",
-              "Details",
-              "Notes",
-              "Created",
-              "Last updated"
-            ]
-          }
-        }
+        ]
       }
     },
     "ui:order": [
@@ -589,10 +589,6 @@
       "events_map": {
         "style": {
           "ui:widget": "radio",
-          "ui:enumNames": [
-            "Points",
-            "Icons"
-          ],
           "ui:options": {
             "inline": true
           }
