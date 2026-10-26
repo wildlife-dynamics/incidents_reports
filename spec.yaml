@@ -37,6 +37,9 @@ rjsf-overrides:
     Map.properties.events_map.properties.style.title: Map Style
     Map.properties.events_map.properties.style.description: Show events as points coloured by event type, or as EarthRanger event icons.
     Map.properties.events_map.properties.style.default: icons
+    # Option labels: the form labels enum options from enumNames in the schema (the
+    # Ecoscope app's RJSF ignores both the oneOf titles and the uiSchema ui:enumNames).
+    Map.properties.events_map.properties.style.enumNames: [Points, Icons]
     Map.properties.events_map.properties.style.oneOf:
       - const: points
         title: Points
@@ -47,6 +50,8 @@ rjsf-overrides:
     Incident Reports Table.properties.reports_table.properties.default_columns.description: >-
       Columns shown when the table opens (Event is always shown). Viewers can
       show or hide columns from the table's Columns menu.
+    Incident Reports Table.properties.reports_table.properties.default_columns.items.enumNames:
+      [Title, Category, Date, State, Priority, Reported by, Location, Details, Notes, Created, Last updated]
     Incident Reports Table.properties.reports_table.properties.default_columns.items.oneOf:
       - {const: title, title: Title}
       - {const: category, title: Category}
@@ -68,15 +73,10 @@ rjsf-overrides:
         title: Incident
 
   uiSchema:
-    # Option labels: ecoscope-desktop's form shows ui:enumNames, not the oneOf titles.
     Map.events_map.style:
       ui:widget: radio
-      ui:enumNames: [Points, Icons]
       ui:options:
         inline: true
-    Incident Reports Table.reports_table.default_columns:
-      items:
-        ui:enumNames: [Title, Category, Date, State, Priority, Reported by, Location, Details, Notes, Created, Last updated]
 
 task-instance-defaults:
   skipif:
