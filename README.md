@@ -32,7 +32,7 @@ Also written to the results folder: `incident_events.csv`, one row per event wit
 | Time Range | Selects incidents by their own date. **All** of an incident's events are included, even those dated outside the range. Times are shown in the range's timezone. |
 | Group by | Optional. **Incident** gives one dashboard view per incident. |
 | Base Maps | Standard ecoscope base-map selector |
-| Map Style | Points (default) or Icons, as radio buttons |
+| Map Style | Icons (default) or Points, as radio buttons |
 | Default Columns | Reports-table columns shown before the viewer changes them |
 | Show Event Icons | ER event icons in the reports table on/off |
 
@@ -52,7 +52,7 @@ get_incident_events            incidents in the range → their events by id (ne
 
 The new tasks are in [`ecoscope-workflows-ext-wd`](../wd-partner-tasks/src/ecoscope-workflows-ext-wd): `tasks/_incidents.py`, tested in `tests/tasks/test_incidents.py`. The KPI cards use the platform's own tasks (`dataframe_column_nunique`, `create_single_value_widget_single_view`); only `events_per_incident` is new.
 
-Incidents inside incidents are followed up to 5 levels deep, and their events count towards the top-level incident. No site uses them yet, so this depth (`incident_events.max_depth`) is hidden from the form; see the comment in `spec.yaml` under `uiSchema`.
+Incidents inside incidents are followed up to 5 levels deep, and their events count towards the top-level incident. No site uses them yet, so this depth is fixed in `spec.yaml` (`max_depth: 5` on `incident_events`) and not shown in the form.
 
 Incidents have no location of their own in ER. Maps use their events' locations; unlocated events appear only in the tables and storyboards.
 

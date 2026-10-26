@@ -15,10 +15,8 @@ time_range:
 groupers:
   groupers: []
 base_maps: {}
-incident_events:
-  max_depth: 5
 events_map:
-  style: points
+  style: icons
 reports_table:
   default_columns: [title, date, state, priority, location, details]
   show_icons: true
