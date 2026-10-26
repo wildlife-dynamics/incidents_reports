@@ -1,0 +1,554 @@
+id: incident_reports
+
+requirements:
+  - name: ecoscope-platform
+    version: ">=2.17.0,<3.0.0"
+    channel: https://repo.prefix.dev/ecoscope-workflows/
+
+  - name: ecoscope-workflows-ext-custom
+    version: "0.1.2"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+
+  # ext-custom requires pydeck==0.9.2, which is only on conda-forge — pinned
+  # explicitly so strict channel priority can resolve it.
+  - name: pydeck
+    version: 0.9.2
+    channel: conda-forge
+
+  # wd-partner-tasks: src/ecoscope-workflows-ext-wd (incident tasks: _incidents.py).
+  - name: ecoscope-workflows-ext-wd
+    version: "0.0.8"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+
+rjsf-overrides:
+  properties:
+    time_range.description: >-
+      Choose the period. Incidents created in this period are included, with all
+      of their events (also events dated outside the period).
+
+    groupers.properties.groupers.description: >-
+      Select Incident for one dashboard view per incident. Leave empty for one
+      view of all incidents.
+    groupers.properties.groupers.items.anyOf:
+      - "$ref": "#/$defs/ValueGrouper"
+
+    base_maps.properties.base_maps.description: Base layers for the map (the first layer is the bottom one).
+
+    Incidents.properties.incident_events.properties.max_depth.title: Nested Incident Depth
+    Incidents.properties.incident_events.properties.max_depth.description: >-
+      How many levels of incidents inside incidents to follow. Their events are
+      counted in the top-level incident.
+
+    Map.properties.events_map.properties.style.title: Map Style
+    Map.properties.events_map.properties.style.description: Show events as points coloured by event type, or as EarthRanger event icons.
+    Map.properties.events_map.properties.style.oneOf:
+      - const: points
+        title: Points
+      - const: icons
+        title: Icons
+
+    Incident Reports Table.properties.reports_table.properties.default_columns.title: Default Columns
+    Incident Reports Table.properties.reports_table.properties.default_columns.description: >-
+      Columns shown when the table opens (Event is always shown). Viewers can
+      show or hide columns from the table's Columns menu.
+    Incident Reports Table.properties.reports_table.properties.default_columns.items.oneOf:
+      - {const: title, title: Title}
+      - {const: category, title: Category}
+      - {const: date, title: Date}
+      - {const: state, title: State}
+      - {const: priority, title: Priority}
+      - {const: reporter, title: Reported by}
+      - {const: location, title: Location}
+      - {const: details, title: Details}
+      - {const: notes, title: Notes}
+      - {const: created, title: Created}
+      - {const: updated, title: Last updated}
+    Incident Reports Table.properties.reports_table.properties.show_icons.title: Show Event Icons
+    Incident Reports Table.properties.reports_table.properties.show_icons.description: Show the EarthRanger event-type icon next to each event.
+
+  $defs:
+    ValueGrouper.properties.index_name.oneOf:
+      - const: incident
+        title: Incident
+
+  uiSchema:
+    # Hidden: no site has incidents inside incidents yet (0 of 11 incidents across
+    # 16 connections, Oct 2026). The task still follows them up to 5 levels deep
+    # (the default) and counts their events in the top-level incident. Remove this
+    # entry to let users change the depth.
+    Incidents.incident_events.max_depth:
+      ui:widget: hidden
+    Map.events_map.style:
+      ui:widget: radio
+      ui:options:
+        inline: true
+
+task-instance-defaults:
+  skipif:
+    conditions:
+      - any_is_empty_df
+      - any_dependency_skipped
+
+workflow:
+  - name: Workflow Details
+    id: workflow_details
+    task: set_workflow_details
+
+  - name: Data Source
+    id: er_client
+    task: set_er_connection
+
+  - name: Time Range
+    id: time_range
+    task: set_time_range
+    partial:
+      time_format: "%d %b %Y %H:%M:%S %Z"
+
+  - id: get_timezone
+    task: get_timezone_from_time_range
+    partial:
+      time_range: ${{ workflow.time_range.return }}
+
+  - name: Group by
+    id: groupers
+    task: set_groupers
+
+  - name: Base Maps
+    id: base_maps
+    task: set_base_maps
+
+  - title: Incidents
+    type: task-group
+    description: Download the incidents and all of their events.
+    tasks:
+      - id: incident_events
+        task: get_incident_events
+        partial:
+          client: ${{ workflow.er_client.return }}
+          time_range: ${{ workflow.time_range.return }}
+
+      - id: events_local_time
+        task: convert_values_to_timezone
+        partial:
+          df: ${{ workflow.incident_events.return }}
+          timezone: ${{ workflow.get_timezone.return }}
+          columns:
+            - time
+
+      # colours are assigned once, before splitting, so an event type keeps its
+      # colour in every view
+      - id: incident_data
+        task: assign_event_type_colors
+        partial:
+          df: ${{ workflow.events_local_time.return }}
+
+      - id: persist_incident_events
+        task: persist_df
+        partial:
+          df: ${{ workflow.incident_data.return }}
+          filetype: csv
+          filename: incident_events
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+
+      - id: incidents_split
+        task: split_groups
+        partial:
+          df: ${{ workflow.incident_data.return }}
+          groupers: ${{ workflow.groupers.return }}
+
+  - title: Key Figures
+    type: task-group
+    description: ""
+    tasks:
+      - id: n_events
+        task: dataframe_column_nunique
+        partial:
+          column_name: id
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: n_events_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: No. of events
+          decimal_places: 0
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.n_events.return }}
+
+      - id: n_events_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.n_events_widget.return }}
+
+      - id: n_incidents
+        task: dataframe_column_nunique
+        partial:
+          column_name: incident_id
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: n_incidents_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: No. of incidents
+          decimal_places: 0
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.n_incidents.return }}
+
+      - id: n_incidents_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.n_incidents_widget.return }}
+
+      - id: per_incident
+        task: events_per_incident
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: per_incident_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Events per incident
+          decimal_places: 1
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.per_incident.return }}
+
+      - id: per_incident_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.per_incident_widget.return }}
+
+      - id: n_types
+        task: dataframe_column_nunique
+        partial:
+          column_name: event_type_display
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: n_types_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Event types
+          decimal_places: 0
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.n_types.return }}
+
+      - id: n_types_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.n_types_widget.return }}
+
+  - title: Map
+    type: task-group
+    description: The incidents' events with a location.
+    tasks:
+      - id: events_map
+        task: draw_incident_events_map
+        partial:
+          tile_layers: ${{ workflow.base_maps.return }}
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: events_map_html
+        task: persist_text
+        partial:
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: events_map
+        mapvalues:
+          argnames: text
+          argvalues: ${{ workflow.events_map.return }}
+
+      - id: events_map_widget
+        task: create_map_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Map of incident events
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.events_map_html.return }}
+
+      - id: events_map_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.events_map_widget.return }}
+
+  - title: Charts
+    type: task-group
+    description: ""
+    tasks:
+      - id: by_type
+        task: draw_events_by_type_chart
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: by_type_html
+        task: persist_text
+        partial:
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: events_by_type
+        mapvalues:
+          argnames: text
+          argvalues: ${{ workflow.by_type.return }}
+
+      - id: by_type_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Events by event type
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.by_type_html.return }}
+
+      - id: by_type_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.by_type_widget.return }}
+
+      - id: by_month
+        task: draw_events_by_month_chart
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: by_month_html
+        task: persist_text
+        partial:
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: events_by_month
+        mapvalues:
+          argnames: text
+          argvalues: ${{ workflow.by_month.return }}
+
+      - id: by_month_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Events by month
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.by_month_html.return }}
+
+      - id: by_month_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.by_month_widget.return }}
+
+      - id: sunburst
+        task: draw_incident_sunburst
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: sunburst_html
+        task: persist_text
+        partial:
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: incident_sunburst
+        mapvalues:
+          argnames: text
+          argvalues: ${{ workflow.sunburst.return }}
+
+      - id: sunburst_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Events by incident and event type
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.sunburst_html.return }}
+
+      - id: sunburst_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.sunburst_widget.return }}
+
+      - id: state_table
+        task: format_incident_state_table
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: state_table_html
+        task: persist_text
+        partial:
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: events_by_state
+        mapvalues:
+          argnames: text
+          argvalues: ${{ workflow.state_table.return }}
+
+      - id: state_table_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Events by state, per incident
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.state_table_html.return }}
+
+      - id: state_table_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.state_table_widget.return }}
+
+  - title: Storyboards
+    type: task-group
+    description: ""
+    tasks:
+      - id: storyboards
+        task: format_incident_storyboards
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: storyboards_html
+        task: persist_text
+        partial:
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: incident_storyboards
+        mapvalues:
+          argnames: text
+          argvalues: ${{ workflow.storyboards.return }}
+
+      - id: storyboards_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Incident storyboards
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.storyboards_html.return }}
+
+      - id: storyboards_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.storyboards_widget.return }}
+
+  - title: Incident Reports Table
+    type: task-group
+    description: One row per event, grouped by incident.
+    tasks:
+      - id: reports_table
+        task: format_incident_reports_table
+        mapvalues:
+          argnames: df
+          argvalues: ${{ workflow.incidents_split.return }}
+
+      - id: reports_table_html
+        task: persist_text
+        partial:
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: incident_reports
+        mapvalues:
+          argnames: text
+          argvalues: ${{ workflow.reports_table.return }}
+
+      - id: reports_table_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: Incident reports
+        map:
+          argnames: [view, data]
+          argvalues: ${{ workflow.reports_table_html.return }}
+
+      - id: reports_table_merged
+        task: merge_widget_views
+        skipif:
+          conditions:
+            - never
+        partial:
+          widgets: ${{ workflow.reports_table_widget.return }}
+
+  - id: events_csv_file
+    task: create_files_single_view
+    partial:
+      files: ${{ workflow.persist_incident_events.return }}
+
+  - name: Dashboard
+    id: dashboard
+    task: gather_dashboard
+    partial:
+      details: ${{ workflow.workflow_details.return }}
+      widgets:
+        - ${{ workflow.n_events_merged.return }}
+        - ${{ workflow.n_incidents_merged.return }}
+        - ${{ workflow.per_incident_merged.return }}
+        - ${{ workflow.n_types_merged.return }}
+        - ${{ workflow.events_map_merged.return }}
+        - ${{ workflow.by_type_merged.return }}
+        - ${{ workflow.by_month_merged.return }}
+        - ${{ workflow.sunburst_merged.return }}
+        - ${{ workflow.state_table_merged.return }}
+        - ${{ workflow.storyboards_merged.return }}
+        - ${{ workflow.reports_table_merged.return }}
+      groupers: ${{ workflow.groupers.return }}
+      time_range: ${{ workflow.time_range.return }}
+      files:
+        - ${{ workflow.events_csv_file.return }}

@@ -1,0 +1,395 @@
+{
+  "error": null,
+  "result": {
+    "filters": {
+      "schema": {
+        "properties": {
+          "incident": {
+            "default": "#4534 Kilifi Predation Event",
+            "oneOf": [
+              {
+                "const": "#4534 Kilifi Predation Event",
+                "title": "#4534 Kilifi Predation Event"
+              },
+              {
+                "const": "#4688 Kilifi Plant Monitoring",
+                "title": "#4688 Kilifi Plant Monitoring"
+              },
+              {
+                "const": "#57029 (untitled)",
+                "title": "#57029 (untitled)"
+              },
+              {
+                "const": "#57078 Poaching",
+                "title": "#57078 Poaching"
+              }
+            ],
+            "title": "Incident",
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "uiSchema": {
+          "incident": {
+            "ui:title": "Incident",
+            "ui:widget": "select"
+          }
+        }
+      }
+    },
+    "layout": [],
+    "metadata": {
+      "description": "",
+      "time_range": "From 01 Jan 2026 00:00:00 UTC to 14 Oct 2026 00:00:00 UTC",
+      "time_zone": "UTC+03:00",
+      "title": "Incident Reports"
+    },
+    "views": {
+      "{\"incident\": \"#4534 Kilifi Predation Event\"}": {
+        "dashboard": [
+          {
+            "data": "1",
+            "id": 0,
+            "is_filtered": true,
+            "title": "No. of events",
+            "widget_type": "stat"
+          },
+          {
+            "data": "1",
+            "id": 1,
+            "is_filtered": true,
+            "title": "No. of incidents",
+            "widget_type": "stat"
+          },
+          {
+            "data": "1.0",
+            "id": 2,
+            "is_filtered": true,
+            "title": "Events per incident",
+            "widget_type": "stat"
+          },
+          {
+            "data": "1",
+            "id": 3,
+            "is_filtered": true,
+            "title": "Event types",
+            "widget_type": "stat"
+          },
+          {
+            "data": "tmpfile",
+            "id": 4,
+            "is_filtered": true,
+            "title": "Map of incident events",
+            "widget_type": "map"
+          },
+          {
+            "data": "tmpfile",
+            "id": 5,
+            "is_filtered": true,
+            "title": "Events by event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 6,
+            "is_filtered": true,
+            "title": "Events by month",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 7,
+            "is_filtered": true,
+            "title": "Events by incident and event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 8,
+            "is_filtered": true,
+            "title": "Events by state, per incident",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 9,
+            "is_filtered": true,
+            "title": "Incident storyboards",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 10,
+            "is_filtered": true,
+            "title": "Incident reports",
+            "widget_type": "graph"
+          }
+        ],
+        "files": [
+          {
+            "path": "tmpfile"
+          }
+        ]
+      },
+      "{\"incident\": \"#4688 Kilifi Plant Monitoring\"}": {
+        "dashboard": [
+          {
+            "data": "4",
+            "id": 0,
+            "is_filtered": true,
+            "title": "No. of events",
+            "widget_type": "stat"
+          },
+          {
+            "data": "1",
+            "id": 1,
+            "is_filtered": true,
+            "title": "No. of incidents",
+            "widget_type": "stat"
+          },
+          {
+            "data": "4.0",
+            "id": 2,
+            "is_filtered": true,
+            "title": "Events per incident",
+            "widget_type": "stat"
+          },
+          {
+            "data": "3",
+            "id": 3,
+            "is_filtered": true,
+            "title": "Event types",
+            "widget_type": "stat"
+          },
+          {
+            "data": "tmpfile",
+            "id": 4,
+            "is_filtered": true,
+            "title": "Map of incident events",
+            "widget_type": "map"
+          },
+          {
+            "data": "tmpfile",
+            "id": 5,
+            "is_filtered": true,
+            "title": "Events by event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 6,
+            "is_filtered": true,
+            "title": "Events by month",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 7,
+            "is_filtered": true,
+            "title": "Events by incident and event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 8,
+            "is_filtered": true,
+            "title": "Events by state, per incident",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 9,
+            "is_filtered": true,
+            "title": "Incident storyboards",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 10,
+            "is_filtered": true,
+            "title": "Incident reports",
+            "widget_type": "graph"
+          }
+        ],
+        "files": [
+          {
+            "path": "tmpfile"
+          }
+        ]
+      },
+      "{\"incident\": \"#57029 (untitled)\"}": {
+        "dashboard": [
+          {
+            "data": "1",
+            "id": 0,
+            "is_filtered": true,
+            "title": "No. of events",
+            "widget_type": "stat"
+          },
+          {
+            "data": "1",
+            "id": 1,
+            "is_filtered": true,
+            "title": "No. of incidents",
+            "widget_type": "stat"
+          },
+          {
+            "data": "1.0",
+            "id": 2,
+            "is_filtered": true,
+            "title": "Events per incident",
+            "widget_type": "stat"
+          },
+          {
+            "data": "1",
+            "id": 3,
+            "is_filtered": true,
+            "title": "Event types",
+            "widget_type": "stat"
+          },
+          {
+            "data": "tmpfile",
+            "id": 4,
+            "is_filtered": true,
+            "title": "Map of incident events",
+            "widget_type": "map"
+          },
+          {
+            "data": "tmpfile",
+            "id": 5,
+            "is_filtered": true,
+            "title": "Events by event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 6,
+            "is_filtered": true,
+            "title": "Events by month",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 7,
+            "is_filtered": true,
+            "title": "Events by incident and event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 8,
+            "is_filtered": true,
+            "title": "Events by state, per incident",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 9,
+            "is_filtered": true,
+            "title": "Incident storyboards",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 10,
+            "is_filtered": true,
+            "title": "Incident reports",
+            "widget_type": "graph"
+          }
+        ],
+        "files": [
+          {
+            "path": "tmpfile"
+          }
+        ]
+      },
+      "{\"incident\": \"#57078 Poaching\"}": {
+        "dashboard": [
+          {
+            "data": "2",
+            "id": 0,
+            "is_filtered": true,
+            "title": "No. of events",
+            "widget_type": "stat"
+          },
+          {
+            "data": "1",
+            "id": 1,
+            "is_filtered": true,
+            "title": "No. of incidents",
+            "widget_type": "stat"
+          },
+          {
+            "data": "2.0",
+            "id": 2,
+            "is_filtered": true,
+            "title": "Events per incident",
+            "widget_type": "stat"
+          },
+          {
+            "data": "2",
+            "id": 3,
+            "is_filtered": true,
+            "title": "Event types",
+            "widget_type": "stat"
+          },
+          {
+            "data": "tmpfile",
+            "id": 4,
+            "is_filtered": true,
+            "title": "Map of incident events",
+            "widget_type": "map"
+          },
+          {
+            "data": "tmpfile",
+            "id": 5,
+            "is_filtered": true,
+            "title": "Events by event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 6,
+            "is_filtered": true,
+            "title": "Events by month",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 7,
+            "is_filtered": true,
+            "title": "Events by incident and event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 8,
+            "is_filtered": true,
+            "title": "Events by state, per incident",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 9,
+            "is_filtered": true,
+            "title": "Incident storyboards",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 10,
+            "is_filtered": true,
+            "title": "Incident reports",
+            "widget_type": "graph"
+          }
+        ],
+        "files": [
+          {
+            "path": "tmpfile"
+          }
+        ]
+      }
+    }
+  },
+  "trace": null
+}

@@ -1,0 +1,85 @@
+wd-all-incidents:
+  name: Wildlife Dynamics, all incidents
+  description: >-
+    Four incidents (8 events): mixed event types, one incident with no located
+    events, one event in review.
+  params:
+    workflow_details:
+      name: Incident Reports
+      description: ""
+    er_client:
+      data_source:
+        name: wd
+    time_range:
+      since: "2026-01-01T00:00:00.000Z"
+      until: "2026-10-14T00:00:00.000Z"
+      timezone: {label: "UTC+03:00", tzCode: Africa/Nairobi, name: Africa/Nairobi, utc: "+03:00"}
+    groupers:
+      groupers: []
+    base_maps: {}
+    incident_events: {max_depth: 5}
+    events_map: {style: points}
+    reports_table: {default_columns: [title, date, state, priority, location, details], show_icons: true}
+
+wd-by-incident:
+  name: Wildlife Dynamics, one view per incident
+  description: Same data grouped by incident, icon map.
+  params:
+    workflow_details:
+      name: Incident Reports
+      description: ""
+    er_client:
+      data_source:
+        name: wd
+    time_range:
+      since: "2026-01-01T00:00:00.000Z"
+      until: "2026-10-14T00:00:00.000Z"
+      timezone: {label: "UTC+03:00", tzCode: Africa/Nairobi, name: Africa/Nairobi, utc: "+03:00"}
+    groupers:
+      groupers: [{index_name: incident}]
+    base_maps: {}
+    incident_events: {max_depth: 5}
+    events_map: {style: icons}
+    reports_table: {default_columns: [title, date, state, priority, location, details], show_icons: true}
+
+apnlosglaciares-glacier:
+  name: APN Los Glaciares, one long incident
+  description: One resolved incident with 30 events (drone and vehicle logbooks) over 10 months.
+  params:
+    workflow_details:
+      name: Incident Reports
+      description: ""
+    er_client:
+      data_source:
+        name: apnlosglaciares
+    time_range:
+      since: "2026-01-01T00:00:00.000Z"
+      until: "2026-10-14T00:00:00.000Z"
+      timezone: {label: "UTC-03:00", tzCode: America/Argentina/Rio_Gallegos, name: America/Argentina/Rio_Gallegos, utc: "-03:00"}
+    groupers:
+      groupers: []
+    base_maps: {}
+    incident_events: {max_depth: 5}
+    events_map: {style: points}
+    reports_table: {default_columns: [title, date, state, priority, location, details], show_icons: true}
+
+mep-2024:
+  name: MEP, December 2024
+  description: Three incidents, all events New.
+  params:
+    workflow_details:
+      name: Incident Reports
+      description: ""
+    er_client:
+      data_source:
+        name: mep
+    time_range:
+      since: "2024-12-01T00:00:00.000Z"
+      until: "2025-01-01T00:00:00.000Z"
+      timezone: {label: "UTC+03:00", tzCode: Africa/Nairobi, name: Africa/Nairobi, utc: "+03:00"}
+    groupers:
+      groupers: []
+    base_maps: {}
+    incident_events: {max_depth: 5}
+    events_map: {style: points}
+    reports_table: {default_columns: [title, date, state, priority, location, details], show_icons: true}
