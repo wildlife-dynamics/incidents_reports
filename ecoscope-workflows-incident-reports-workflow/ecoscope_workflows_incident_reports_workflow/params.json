@@ -289,21 +289,6 @@
       "required": [],
       "title": "Base Maps"
     },
-    "incident_events": {
-      "additionalProperties": false,
-      "properties": {
-        "max_depth": {
-          "default": 5,
-          "title": "Max Depth",
-          "type": "integer",
-          "description": "How many levels of incidents inside incidents to follow.",
-          "ecoscope:advanced": true
-        }
-      },
-      "required": [],
-      "type": "object",
-      "title": ""
-    },
     "events_map": {
       "additionalProperties": false,
       "properties": {
@@ -508,7 +493,6 @@
       "time_range",
       "groupers",
       "base_maps",
-      "incident_events",
       "events_map",
       "reports_table"
     ]

@@ -17,7 +17,6 @@ wd-all-incidents:
     groupers:
       groupers: []
     base_maps: {}
-    incident_events: {max_depth: 5}
     events_map: {style: points}
     reports_table: {default_columns: [title, date, state, priority, location, details], show_icons: true}
 
@@ -38,7 +37,6 @@ wd-by-incident:
     groupers:
       groupers: [{index_name: incident}]
     base_maps: {}
-    incident_events: {max_depth: 5}
     events_map: {style: icons}
     reports_table: {default_columns: [title, date, state, priority, location, details], show_icons: true}
 
@@ -59,7 +57,6 @@ apnlosglaciares-glacier:
     groupers:
       groupers: []
     base_maps: {}
-    incident_events: {max_depth: 5}
     events_map: {style: points}
     reports_table: {default_columns: [title, date, state, priority, location, details], show_icons: true}
 
@@ -80,6 +77,5 @@ mep-2024:
     groupers:
       groupers: []
     base_maps: {}
-    incident_events: {max_depth: 5}
     events_map: {style: points}
     reports_table: {default_columns: [title, date, state, priority, location, details], show_icons: true}

@@ -283,28 +283,6 @@
       "required": [],
       "title": "Base Maps"
     },
-    "Incidents": {
-      "type": "object",
-      "description": "Download the incidents and all of their events.",
-      "ecoscope:task_group": true,
-      "properties": {
-        "incident_events": {
-          "additionalProperties": false,
-          "properties": {
-            "max_depth": {
-              "default": 5,
-              "title": "Nested Incident Depth",
-              "type": "integer",
-              "description": "How many levels of incidents inside incidents to follow. Their events are counted in the top-level incident.",
-              "ecoscope:advanced": true
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": ""
-        }
-      }
-    },
     "Map": {
       "type": "object",
       "description": "The incidents' events with a location.",
@@ -314,7 +292,7 @@
           "additionalProperties": false,
           "properties": {
             "style": {
-              "default": "points",
+              "default": "icons",
               "enum": [
                 "points",
                 "icons"
@@ -578,7 +556,24 @@
         "ui:order": [
           "default_columns",
           "show_icons"
-        ]
+        ],
+        "default_columns": {
+          "items": {
+            "ui:enumNames": [
+              "Title",
+              "Category",
+              "Date",
+              "State",
+              "Priority",
+              "Reported by",
+              "Location",
+              "Details",
+              "Notes",
+              "Created",
+              "Last updated"
+            ]
+          }
+        }
       }
     },
     "ui:order": [
@@ -587,21 +582,17 @@
       "time_range",
       "groupers",
       "base_maps",
-      "Incidents",
       "Map",
       "Incident Reports Table"
     ],
-    "Incidents": {
-      "incident_events": {
-        "max_depth": {
-          "ui:widget": "hidden"
-        }
-      }
-    },
     "Map": {
       "events_map": {
         "style": {
           "ui:widget": "radio",
+          "ui:enumNames": [
+            "Points",
+            "Icons"
+          ],
           "ui:options": {
             "inline": true
           }

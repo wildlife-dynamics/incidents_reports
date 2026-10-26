@@ -34,13 +34,9 @@ rjsf-overrides:
 
     base_maps.properties.base_maps.description: Base layers for the map (the first layer is the bottom one).
 
-    Incidents.properties.incident_events.properties.max_depth.title: Nested Incident Depth
-    Incidents.properties.incident_events.properties.max_depth.description: >-
-      How many levels of incidents inside incidents to follow. Their events are
-      counted in the top-level incident.
-
     Map.properties.events_map.properties.style.title: Map Style
     Map.properties.events_map.properties.style.description: Show events as points coloured by event type, or as EarthRanger event icons.
+    Map.properties.events_map.properties.style.default: icons
     Map.properties.events_map.properties.style.oneOf:
       - const: points
         title: Points
@@ -72,16 +68,15 @@ rjsf-overrides:
         title: Incident
 
   uiSchema:
-    # Hidden: no site has incidents inside incidents yet (0 of 11 incidents across
-    # 16 connections, Oct 2026). The task still follows them up to 5 levels deep
-    # (the default) and counts their events in the top-level incident. Remove this
-    # entry to let users change the depth.
-    Incidents.incident_events.max_depth:
-      ui:widget: hidden
+    # Option labels: ecoscope-desktop's form shows ui:enumNames, not the oneOf titles.
     Map.events_map.style:
       ui:widget: radio
+      ui:enumNames: [Points, Icons]
       ui:options:
         inline: true
+    Incident Reports Table.reports_table.default_columns:
+      items:
+        ui:enumNames: [Title, Category, Date, State, Priority, Reported by, Location, Details, Notes, Created, Last updated]
 
 task-instance-defaults:
   skipif:
@@ -126,6 +121,11 @@ workflow:
         partial:
           client: ${{ workflow.er_client.return }}
           time_range: ${{ workflow.time_range.return }}
+          # Not in the form: no site has incidents inside incidents yet (0 of 11
+          # incidents across 16 connections, Oct 2026). Nested incidents are still
+          # followed up to 5 levels deep and their events counted in the top-level
+          # incident. To let users change it, remove this line.
+          max_depth: 5
 
       - id: events_local_time
         task: convert_values_to_timezone
