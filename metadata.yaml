@@ -1,0 +1,14 @@
+name: Incident Reports
+author:
+  name: Zakariya
+  organization: Wildlife Dynamics
+  email: zakariya@wildlifedynamics.com
+description: >
+  EarthRanger incidents (collections of events) with all of their events:
+  key figures, a map of the events, events by type and by month, events by
+  incident and type, events by state per incident, an icon storyboard of each
+  incident, and an incident reports table. Group by incident for one dashboard
+  view per incident.
+theory: ""
+output_comment: ""
+citation: ""

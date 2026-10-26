@@ -1,0 +1,125 @@
+{
+  "error": null,
+  "result": {
+    "filters": {
+      "schema": {
+        "properties": {
+          "All": {
+            "default": "True",
+            "oneOf": [
+              {
+                "const": "True",
+                "title": "True"
+              }
+            ],
+            "title": "All",
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "uiSchema": {
+          "All": {
+            "ui:title": "All",
+            "ui:widget": "select"
+          }
+        }
+      }
+    },
+    "layout": [],
+    "metadata": {
+      "description": "",
+      "time_range": "From 01 Jan 2026 00:00:00 UTC to 14 Oct 2026 00:00:00 UTC",
+      "time_zone": "UTC-03:00",
+      "title": "Incident Reports"
+    },
+    "views": {
+      "{\"All\": \"True\"}": {
+        "dashboard": [
+          {
+            "data": "8",
+            "id": 0,
+            "is_filtered": true,
+            "title": "No. of events",
+            "widget_type": "stat"
+          },
+          {
+            "data": "4",
+            "id": 1,
+            "is_filtered": true,
+            "title": "No. of incidents",
+            "widget_type": "stat"
+          },
+          {
+            "data": "2.0",
+            "id": 2,
+            "is_filtered": true,
+            "title": "Events per incident",
+            "widget_type": "stat"
+          },
+          {
+            "data": "7",
+            "id": 3,
+            "is_filtered": true,
+            "title": "Event types",
+            "widget_type": "stat"
+          },
+          {
+            "data": "tmpfile",
+            "id": 4,
+            "is_filtered": true,
+            "title": "Map of incident events",
+            "widget_type": "map"
+          },
+          {
+            "data": "tmpfile",
+            "id": 5,
+            "is_filtered": true,
+            "title": "Events by event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 6,
+            "is_filtered": true,
+            "title": "Events by month",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 7,
+            "is_filtered": true,
+            "title": "Events by incident and event type",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 8,
+            "is_filtered": true,
+            "title": "Events by state, per incident",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 9,
+            "is_filtered": true,
+            "title": "Incident storyboards",
+            "widget_type": "graph"
+          },
+          {
+            "data": "tmpfile",
+            "id": 10,
+            "is_filtered": true,
+            "title": "Incident reports",
+            "widget_type": "graph"
+          }
+        ],
+        "files": [
+          {
+            "path": "tmpfile"
+          }
+        ]
+      }
+    }
+  },
+  "trace": null
+}
