@@ -34,7 +34,7 @@ Also written to the results folder: `incident_events.csv`, one row per event wit
 | Base Maps | Standard ecoscope base-map selector |
 | Show event icons on the map | Checkbox, ticked by default: ER event icons; unticked: points coloured by event type |
 | Default Columns | Reports-table columns shown before the viewer changes them |
-| Show Event Icons | ER event icons in the reports table on/off |
+| Show event icons in the table | ER event icons in the reports table on/off |
 
 ## How it works
 

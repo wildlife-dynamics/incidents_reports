@@ -24,25 +24,27 @@ rjsf-overrides:
   properties:
     time_range.description: >-
       Choose the period. Incidents created in this period are included, with all
-      of their events (also events dated outside the period).
+      of their events.
 
     groupers.properties.groupers.description: >-
-      Select Incident for one dashboard view per incident. Leave empty for one
+      Choose Incident for one view per incident (optional). Leave empty for one
       view of all incidents.
     groupers.properties.groupers.items.anyOf:
       - "$ref": "#/$defs/ValueGrouper"
 
-    base_maps.properties.base_maps.description: Base layers for the map (the first layer is the bottom one).
+    base_maps.properties.base_maps.description: >-
+      Select tile layers to use as base layers in map outputs. The first layer in the
+      list will be the bottommost layer displayed.
 
     # A checkbox, not a points/icons radio: the Ecoscope app's radio buttons never
     # mark the selected option, so the default looked unset.
     Map.properties.events_map.properties.show_icons.title: Show event icons on the map
-    Map.properties.events_map.properties.show_icons.description: Untick to show events as points coloured by event type.
+    Map.properties.events_map.properties.show_icons.description: ""
 
     Incident Reports Table.properties.reports_table.properties.default_columns.title: Default Columns
     Incident Reports Table.properties.reports_table.properties.default_columns.description: >-
-      Columns shown when the table opens (Event is always shown). Viewers can
-      show or hide columns from the table's Columns menu.
+      Choose the columns shown when the table opens. Event is always shown, and
+      viewers can change the columns from the table's Columns menu.
     Incident Reports Table.properties.reports_table.properties.default_columns.items.enumNames:
       [Title, Category, Date, State, Priority, Reported by, Location, Details, Notes, Created, Last updated]
     Incident Reports Table.properties.reports_table.properties.default_columns.items.oneOf:
@@ -57,13 +59,21 @@ rjsf-overrides:
       - {const: notes, title: Notes}
       - {const: created, title: Created}
       - {const: updated, title: Last updated}
-    Incident Reports Table.properties.reports_table.properties.show_icons.title: Show Event Icons
-    Incident Reports Table.properties.reports_table.properties.show_icons.description: Show the EarthRanger event-type icon next to each event.
+    Incident Reports Table.properties.reports_table.properties.show_icons.title: Show event icons in the table
+    Incident Reports Table.properties.reports_table.properties.show_icons.description: ""
 
   $defs:
     ValueGrouper.properties.index_name.oneOf:
       - const: incident
         title: Incident
+
+  # No per-item labels ("Default Columns-1", ...) on list items.
+  uiSchema:
+    groupers.groupers.items.anyOf:
+      - ui:options:
+          label: false
+    base_maps.base_maps.items.ui:options.label: false
+    Incident Reports Table.reports_table.default_columns.items.ui:options.label: false
 
 task-instance-defaults:
   skipif:
@@ -259,7 +269,7 @@ workflow:
 
   - title: Map
     type: task-group
-    description: The incidents' events with a location.
+    description: ""
     tasks:
       - id: events_map
         task: draw_incident_events_map
