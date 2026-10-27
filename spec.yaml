@@ -525,6 +525,11 @@ workflow:
 
   - id: events_csv_file
     task: create_files_single_view
+    # no incidents in the period: the events CSV is skipped, and this step's fallback
+    # gives an empty file list, so the dashboard still shows instead of the run failing
+    skipif:
+      conditions:
+        - never
     partial:
       files: ${{ workflow.persist_incident_events.return }}
 
