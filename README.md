@@ -12,7 +12,7 @@ Nothing in it is partner-specific. You pick the data source and time range, and 
 | No. of incidents | Incidents in the time range |
 | Events per incident | Average number of events per incident |
 | Event types | Number of distinct event types |
-| Map of incident events | Located events, coloured by event type, as points or ER icons (**Map Style**). Overlapping events get a count badge. When a view shows one incident, the legend is titled with it. |
+| Map of incident events | Located events, coloured by event type, as ER icons or points (**Show event icons on the map**). Overlapping events get a count badge. When a view shows one incident, the legend is titled with it. |
 | Events by event type | Horizontal bars, largest first, with count and share |
 | Events by month | One bar per month (empty months kept), stacked by event type |
 | Events by incident and event type | Sunburst: incidents inside (serial with a shortened title; full title on hover), their event types outside |
@@ -32,7 +32,7 @@ Also written to the results folder: `incident_events.csv`, one row per event wit
 | Time Range | Selects incidents by their own date. **All** of an incident's events are included, even those dated outside the range. Times are shown in the range's timezone. |
 | Group by | Optional. **Incident** gives one dashboard view per incident. |
 | Base Maps | Standard ecoscope base-map selector |
-| Map Style | Icons (default) or Points, as radio buttons |
+| Show event icons on the map | Checkbox, ticked by default: ER event icons; unticked: points coloured by event type |
 | Default Columns | Reports-table columns shown before the viewer changes them |
 | Show Event Icons | ER event icons in the reports table on/off |
 
@@ -92,6 +92,6 @@ Snapshots are in `__results_snapshots__/`. `test_otel_traces_success` currently 
 
 ### Releasing
 
-`spec.yaml` takes ext-wd `0.0.8` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
+`spec.yaml` takes ext-wd `0.0.9` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
 
 To try unreleased task changes against the compiled workflow, `make build` builds `../wd-partner-tasks` into the local channel `/tmp/ecoscope-workflows-custom/release/artifacts/`; point the spec requirement there temporarily (and add the channel to `pixi.toml`), but don't commit that.

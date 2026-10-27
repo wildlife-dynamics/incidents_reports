@@ -16,7 +16,7 @@ OUTPUT_DIR    ?= /tmp/incident-reports/output
 # spec.yaml uses the published release; `make build` builds the local checkout into
 # a local channel, for trying unreleased task changes.
 EXT_LIB_DIR   ?= $(shell dirname $(CURDIR))/wd-partner-tasks
-EXT_VERSION   ?= 0.0.8
+EXT_VERSION   ?= 0.0.9
 LOCAL_CHANNEL ?= /tmp/ecoscope-workflows-custom/release/artifacts
 CASE          ?= wd-all-incidents
 

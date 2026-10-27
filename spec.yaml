@@ -17,7 +17,7 @@ requirements:
 
   # wd-partner-tasks: src/ecoscope-workflows-ext-wd (incident tasks: _incidents.py).
   - name: ecoscope-workflows-ext-wd
-    version: "0.0.8"
+    version: "0.0.9"
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
 rjsf-overrides:
@@ -34,17 +34,10 @@ rjsf-overrides:
 
     base_maps.properties.base_maps.description: Base layers for the map (the first layer is the bottom one).
 
-    Map.properties.events_map.properties.style.title: Map Style
-    Map.properties.events_map.properties.style.description: Show events as points coloured by event type, or as EarthRanger event icons.
-    Map.properties.events_map.properties.style.default: icons
-    # Option labels: the form labels enum options from enumNames in the schema (the
-    # Ecoscope app's RJSF ignores both the oneOf titles and the uiSchema ui:enumNames).
-    Map.properties.events_map.properties.style.enumNames: [Points, Icons]
-    Map.properties.events_map.properties.style.oneOf:
-      - const: points
-        title: Points
-      - const: icons
-        title: Icons
+    # A checkbox, not a points/icons radio: the Ecoscope app's radio buttons never
+    # mark the selected option, so the default looked unset.
+    Map.properties.events_map.properties.show_icons.title: Show event icons on the map
+    Map.properties.events_map.properties.show_icons.description: Untick to show events as points coloured by event type.
 
     Incident Reports Table.properties.reports_table.properties.default_columns.title: Default Columns
     Incident Reports Table.properties.reports_table.properties.default_columns.description: >-
@@ -71,12 +64,6 @@ rjsf-overrides:
     ValueGrouper.properties.index_name.oneOf:
       - const: incident
         title: Incident
-
-  uiSchema:
-    Map.events_map.style:
-      ui:widget: radio
-      ui:options:
-        inline: true
 
 task-instance-defaults:
   skipif:
