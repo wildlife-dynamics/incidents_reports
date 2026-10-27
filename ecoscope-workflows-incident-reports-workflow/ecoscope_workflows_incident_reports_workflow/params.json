@@ -292,15 +292,11 @@
     "events_map": {
       "additionalProperties": false,
       "properties": {
-        "style": {
-          "default": "points",
-          "enum": [
-            "points",
-            "icons"
-          ],
-          "title": "Style",
-          "type": "string",
-          "description": "Event-type points with a white outline, or the EarthRanger event icons."
+        "show_icons": {
+          "default": true,
+          "title": "Show Icons",
+          "type": "boolean",
+          "description": "Draw events with their EarthRanger event icons; otherwise as points coloured by event type."
         }
       },
       "required": [],

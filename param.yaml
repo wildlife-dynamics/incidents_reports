@@ -16,7 +16,7 @@ groupers:
   groupers: []
 base_maps: {}
 events_map:
-  style: icons
+  show_icons: true
 reports_table:
   default_columns: [title, date, state, priority, location, details]
   show_icons: true
