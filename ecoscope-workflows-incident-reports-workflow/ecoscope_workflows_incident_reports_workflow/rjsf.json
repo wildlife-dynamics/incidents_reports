@@ -65,7 +65,7 @@
         "until"
       ],
       "type": "object",
-      "description": "Choose the period. Incidents created in this period are included, with all of their events (also events dated outside the period).",
+      "description": "Choose the period. Incidents created in this period are included, with all of their events.",
       "title": "Time Range"
     },
     "groupers": {
@@ -83,7 +83,7 @@
           },
           "title": " ",
           "type": "array",
-          "description": "Select Incident for one dashboard view per incident. Leave empty for one view of all incidents."
+          "description": "Choose Incident for one view per incident (optional). Leave empty for one view of all incidents."
         }
       },
       "type": "object",
@@ -275,7 +275,7 @@
           },
           "title": " ",
           "type": "array",
-          "description": "Base layers for the map (the first layer is the bottom one).",
+          "description": "Select tile layers to use as base layers in map outputs. The first layer in the list will be the bottommost layer displayed.",
           "ecoscope:advanced": true
         }
       },
@@ -285,7 +285,7 @@
     },
     "Map": {
       "type": "object",
-      "description": "The incidents' events with a location.",
+      "description": "",
       "ecoscope:task_group": true,
       "properties": {
         "events_map": {
@@ -295,7 +295,7 @@
               "default": true,
               "title": "Show event icons on the map",
               "type": "boolean",
-              "description": "Untick to show events as points coloured by event type."
+              "description": ""
             }
           },
           "required": [],
@@ -398,13 +398,13 @@
               },
               "title": "Default Columns",
               "type": "array",
-              "description": "Columns shown when the table opens (Event is always shown). Viewers can show or hide columns from the table's Columns menu."
+              "description": "Choose the columns shown when the table opens. Event is always shown, and viewers can change the columns from the table's Columns menu."
             },
             "show_icons": {
               "default": true,
-              "title": "Show Event Icons",
+              "title": "Show event icons in the table",
               "type": "boolean",
-              "description": "Show the EarthRanger event-type icon next to each event."
+              "description": ""
             }
           },
           "required": [],
@@ -555,7 +555,14 @@
         "ui:order": [
           "default_columns",
           "show_icons"
-        ]
+        ],
+        "default_columns": {
+          "items": {
+            "ui:options": {
+              "label": false
+            }
+          }
+        }
       }
     },
     "ui:order": [
@@ -566,7 +573,29 @@
       "base_maps",
       "Map",
       "Incident Reports Table"
-    ]
+    ],
+    "groupers": {
+      "groupers": {
+        "items": {
+          "anyOf": [
+            {
+              "ui:options": {
+                "label": false
+              }
+            }
+          ]
+        }
+      }
+    },
+    "base_maps": {
+      "base_maps": {
+        "items": {
+          "ui:options": {
+            "label": false
+          }
+        }
+      }
+    }
   },
   "additionalProperties": false
 }
