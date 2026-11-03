@@ -25,8 +25,8 @@
       "properties": {
         "data_source": {
           "$ref": "#/$defs/EarthRangerConnection",
-          "title": "",
-          "description": "Select one of your configured data sources."
+          "description": "Select one of your configured data sources.",
+          "title": ""
         }
       },
       "required": [
@@ -39,23 +39,19 @@
       "additionalProperties": false,
       "properties": {
         "since": {
+          "description": "The start time",
           "format": "date-time",
           "title": "Since",
-          "type": "string",
-          "description": "The start time"
+          "type": "string"
         },
         "until": {
+          "description": "The end time",
           "format": "date-time",
           "title": "Until",
-          "type": "string",
-          "description": "The end time"
+          "type": "string"
         },
         "timezone": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/TimezoneInfo"
-            }
-          ],
+          "$ref": "#/$defs/TimezoneInfo",
           "default": null,
           "title": "Timezone"
         }
@@ -73,6 +69,7 @@
       "properties": {
         "groupers": {
           "default": null,
+          "description": "Choose Incident for one view per incident (optional). Leave empty for one view of all incidents.",
           "items": {
             "anyOf": [
               {
@@ -82,8 +79,7 @@
             "title": "Group by"
           },
           "title": " ",
-          "type": "array",
-          "description": "Choose Incident for one view per incident (optional). Leave empty for one view of all incidents."
+          "type": "array"
         }
       },
       "type": "object",
@@ -108,8 +104,9 @@
               "min_zoom": 0
             }
           ],
+          "description": "Select tile layers to use as base layers in map outputs. The first layer in the list will be the bottommost layer displayed.",
+          "ecoscope:advanced": true,
           "items": {
-            "title": "Base Layer",
             "anyOf": [
               {
                 "description": "A tiled raster layer loaded on-demand from a URL template (e.g., base maps).",
@@ -127,8 +124,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -152,8 +149,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -177,8 +174,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -202,8 +199,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -227,8 +224,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -250,8 +247,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Custom Layer Opacity",
                     "type": "number"
                   },
@@ -271,12 +268,11 @@
                 "title": "Custom Layer (Advanced)",
                 "type": "object"
               }
-            ]
+            ],
+            "title": "Base Layer"
           },
           "title": " ",
-          "type": "array",
-          "description": "Select tile layers to use as base layers in map outputs. The first layer in the list will be the bottommost layer displayed.",
-          "ecoscope:advanced": true
+          "type": "array"
         }
       },
       "type": "object",
@@ -293,9 +289,9 @@
           "properties": {
             "show_icons": {
               "default": true,
+              "description": "",
               "title": "Show event icons on the map",
-              "type": "boolean",
-              "description": ""
+              "type": "boolean"
             }
           },
           "required": [],
@@ -321,6 +317,7 @@
                 "location",
                 "details"
               ],
+              "description": "Choose the columns shown when the table opens. Event is always shown, and viewers can change the columns from the table's Columns menu.",
               "items": {
                 "enum": [
                   "title",
@@ -397,14 +394,13 @@
                 ]
               },
               "title": "Default Columns",
-              "type": "array",
-              "description": "Choose the columns shown when the table opens. Event is always shown, and viewers can change the columns from the table's Columns menu."
+              "type": "array"
             },
             "show_icons": {
               "default": true,
+              "description": "",
               "title": "Show event icons in the table",
-              "type": "boolean",
-              "description": ""
+              "type": "boolean"
             }
           },
           "required": [],

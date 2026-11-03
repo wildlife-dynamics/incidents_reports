@@ -38,6 +38,7 @@ from ecoscope.platform.tasks.skip import never as never
 from ecoscope.platform.tasks.transformation import (
     convert_values_to_timezone as convert_values_to_timezone,
 )
+from ecoscope.platform.tasks.transformation import map_columns as map_columns
 from ecoscope_workflows_ext_wd.tasks import (
     assign_event_type_colors as assign_event_type_colors,
 )
@@ -237,6 +238,31 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
         .call()
     )
 
+    incident_events_csv = (
+        task(map_columns)
+        .validate()
+        .set_task_instance_id("incident_events_csv")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(
+            df=incident_data,
+            drop_columns=["icon", "type_color"],
+            retain_columns=[],
+            rename_columns={},
+            raise_if_not_found=False,
+            duplicate_strategy="suffix",
+            **(params.get("incident_events_csv") or {}),
+        )
+        .call()
+    )
+
     persist_incident_events = (
         task(persist_df)
         .validate()
@@ -251,7 +277,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            df=incident_data,
+            df=incident_events_csv,
             filetype="csv",
             filename="incident_events",
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],

@@ -17,7 +17,7 @@ requirements:
 
   # wd-partner-tasks: src/ecoscope-workflows-ext-wd (incident tasks: _incidents.py).
   - name: ecoscope-workflows-ext-wd
-    version: "0.0.9"
+    version: "0.0.13"
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
 rjsf-overrides:
@@ -139,10 +139,21 @@ workflow:
         partial:
           df: ${{ workflow.events_local_time.return }}
 
+      # the CSV leaves out the icon images (a data URI on every row) and colours
+      - id: incident_events_csv
+        task: map_columns
+        partial:
+          df: ${{ workflow.incident_data.return }}
+          drop_columns: [icon, type_color]
+          retain_columns: []
+          rename_columns: {}
+          raise_if_not_found: false
+          duplicate_strategy: suffix
+
       - id: persist_incident_events
         task: persist_df
         partial:
-          df: ${{ workflow.incident_data.return }}
+          df: ${{ workflow.incident_events_csv.return }}
           filetype: csv
           filename: incident_events
           root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
