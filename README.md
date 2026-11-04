@@ -12,7 +12,7 @@ Nothing in it is partner-specific. You pick the data source and time range, and 
 | No. of incidents | Incidents in the time range |
 | Events per incident | Average number of events per incident |
 | Event types | Number of distinct event types |
-| Map of incident events | Located events, coloured by event type, as ER icons or points (**Show event icons on the map**). Overlapping events get a count badge. When a view shows one incident, the legend is titled with it. |
+| Map of incident events | Located events as their ER icons, or as points coloured by event type (**Show event icons on the map**). Types without an icon of their own (or with ER's generic grey disc) show as a dot of their colour. Overlapping events get a count badge. When a view shows one incident, the legend is titled with it. |
 | Events by event type | Horizontal bars, largest first, with count and share |
 | Events by month | One bar per month (empty months kept), stacked by event type |
 | Events by incident and event type | Sunburst: incidents inside (serial with a shortened title; full title on hover), their event types outside |
@@ -20,7 +20,7 @@ Nothing in it is partner-specific. You pick the data source and time range, and 
 | Incident storyboards | Each incident (serial, title under it) as its ER event icons in time order, with the time between events on the arrows. Same-type events within 12 h share one tile (×N). Unlocated events are marked "no location". |
 | Incident reports | One row per event, grouped by incident (merged incident cell: serial, title under it, and duration). Event (icon + serial: type), Title, Date, State, Priority, Location and Details by default; Category, Reported by, Notes, Created and Last updated can be added from the **Columns** menu. Long details open with "+N more". |
 
-Every widget uses the same colour for an event type (most frequent type first; grey after 8 types).
+Every event type has its own colour, the same in every widget (most frequent type first; 16 set colours, then generated ones). All widgets, including the map's legend and scale bar, share the storyboards' font and text colours.
 
 Also written to the results folder: `incident_events.csv`, one row per event with its incident, listed in the desktop app's **Files** tab.
 
@@ -97,6 +97,6 @@ Snapshots are in `__results_snapshots__/`. `test_otel_traces_success` currently 
 
 ### Releasing
 
-`spec.yaml` takes ext-wd `0.0.13` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
+`spec.yaml` takes ext-wd `0.0.14` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
 
 To try unreleased task changes against the compiled workflow, `make build` builds `../wd-partner-tasks` into the local channel `/tmp/ecoscope-workflows-custom/release/artifacts/`; point the spec requirement there temporarily (and add the channel to `pixi.toml`), but don't commit that.
