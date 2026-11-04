@@ -16,7 +16,7 @@ OUTPUT_DIR    ?= /tmp/incident-reports/output
 # spec.yaml uses the published release; `make build` builds the local checkout into
 # a local channel, for trying unreleased task changes.
 EXT_LIB_DIR   ?= $(shell dirname $(CURDIR))/wd-partner-tasks
-EXT_VERSION   ?= 0.0.9
+EXT_VERSION   ?= 0.0.13
 LOCAL_CHANNEL ?= /tmp/ecoscope-workflows-custom/release/artifacts
 CASE          ?= wd-all-incidents
 
@@ -164,6 +164,18 @@ test: ## Run the compiled workflow's tests for one case (CASE=wd-all-incidents)
 	@cd $(WORKFLOW_DIR) && pixi run -e test test-app-metadata --case $(CASE)
 	@cd $(WORKFLOW_DIR) && pixi run -e test test-cli-sequential-mock-io --case $(CASE)
 	@echo ""
+
+volume: ## Run on made-up volume data (200 incidents, 935 events, 18 types) and preview it
+	$(call print_head,📈,Volume check: 200 incidents,$(AQUA))
+	@sed -e 's/since: .*/since: "2025-11-01T00:00:00.000Z"/' -e 's/until: .*/until: "2026-11-01T00:00:00.000Z"/' \
+		$(PARAM_FILE) > /tmp/incident-reports-volume-param.yaml
+	@rm -rf /tmp/incident-reports/volume && cd $(WORKFLOW_DIR) && \
+	WT_TASK_MOCK_IO__ECOSCOPE_WORKFLOWS_EXT_WD_TASKS_GET_INCIDENT_EVENTS=$(MOCK_IO_DIR)/volume-200.example-return.parquet \
+	ECOSCOPE_WORKFLOWS_RESULTS="file:///tmp/incident-reports/volume" \
+	pixi run ecoscope-workflows-incident-reports-workflow run \
+		--config-file /tmp/incident-reports-volume-param.yaml --execution-mode sequential --mock-io
+	@ls -la /tmp/incident-reports/volume | awk 'NR>3 {printf "  %8.0f KB  %s\n", $$5/1024, $$9}'
+	@python3 dev/preview_dashboard.py /tmp/incident-reports/volume $(PREVIEW_FLAGS)
 
 open: ## Open all HTML outputs in the browser
 	$(call print_head,🌐,Opening Outputs,$(AQUA))

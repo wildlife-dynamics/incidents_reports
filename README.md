@@ -63,6 +63,7 @@ make dev                           # fast compile: cached env + ../wd-partner-ta
 make run                           # run with param.yaml on real data → OUTPUT_DIR (default /tmp/incident-reports/output)
 python3 dev/preview_dashboard.py /tmp/incident-reports/output   # dashboard.html using layout.json
 make test CASE=wd-all-incidents    # app metadata + mock-IO CLI tests with snapshots
+make volume                        # made-up busy site (200 incidents) → output sizes + dashboard preview
 ```
 
 The editable ext-wd takes its version from wd-partner-tasks' git tags, so fetch them (`git fetch --tags`) or set `SETUPTOOLS_SCM_PRETEND_VERSION` to the version in `spec.yaml`. `make dev` output contains absolute local paths, so **don't commit it**, nor `wt-compiler-env-overrides.toml`.
@@ -88,10 +89,14 @@ Cached envs use ~2.5 GB each; clear them with `rm -rf ~/.cache/wt-dev-discovery`
 
 The mock-IO data is in this repo, `mock-io/get-incident-events.example-return.parquet` (wd events, reporters anonymised), not in the ext-wd package. `make test` points wt-task at it through `WT_TASK_MOCK_IO__ECOSCOPE_WORKFLOWS_EXT_WD_TASKS_GET_INCIDENT_EVENTS`; set that variable yourself when running the generated tests directly. Mock runs need no EarthRanger connection.
 
+### Volume check
+
+No site we can reach has more than 4 incidents, so `mock-io/volume-200.example-return.parquet` is a made-up year of a busy site: 200 incidents, 935 events, 18 event types around Tsavo (icons borrowed from the wd example, so some types share one). `dev/make_volume_mock.py` regenerates it (fixed seed). `make volume` runs the workflow on it, lists the output sizes and opens the preview. Run it after changing the tasks: every event type should have its own colour, and no output should be more than about 1 MB.
+
 Snapshots are in `__results_snapshots__/`. `test_otel_traces_success` currently fails: the generated workflow env has no `opentelemetry-sdk`, so no spans are written. That is the generated env, not the workflow.
 
 ### Releasing
 
-`spec.yaml` takes ext-wd `0.0.9` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
+`spec.yaml` takes ext-wd `0.0.13` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
 
 To try unreleased task changes against the compiled workflow, `make build` builds `../wd-partner-tasks` into the local channel `/tmp/ecoscope-workflows-custom/release/artifacts/`; point the spec requirement there temporarily (and add the channel to `pixi.toml`), but don't commit that.
