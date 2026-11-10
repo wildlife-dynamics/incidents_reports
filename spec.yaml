@@ -1,5 +1,54 @@
 id: incident_reports
 
+metadata:
+  name: Incident Reports Workflow
+  description: >-
+    Shows EarthRanger incidents (collections of related events, such as a poaching case made of
+    a carcass report and a poacher-spoor report) as whole cases, with all of their events:
+    what happened, in what order, where, and how far each case has got. Optionally one
+    dashboard view per incident.
+  maintainers:
+    - name: Zakariya Husayn
+      email: zakariya@wildlifedynamics.com
+      role: owner
+    - name: Zakariya Husayn
+      email: zakariya@wildlifedynamics.com
+      role: reviewer
+  outputs:
+    - name: Incident Reports Dashboard
+      type: dashboard
+      description: >-
+        Headline tiles, a map of the incidents' events, events by type and by month, a sunburst
+        of events by incident and type, events by state per incident, incident storyboards and
+        an incident reports table.
+      indicators:
+        - name: Incidents
+    - name: Map of incident events
+      type: map
+      description: >-
+        Located events as their EarthRanger icons, or as points coloured by event type.
+      indicators:
+        - name: Incidents
+    - name: Incident storyboards and reports table
+      type: plot
+      description: >-
+        Each incident's events in time order with the time between them, and one row per event
+        grouped by incident.
+      indicators:
+        - name: Incidents
+    - name: Incident events table
+      type: file
+      description: >-
+        incident_events.csv, one row per event with its incident.
+      indicators:
+        - name: Incidents
+  license: BSD-3-Clause
+  repository: https://github.com/wildlife-dynamics/incidents_reports
+  documentation: https://github.com/wildlife-dynamics/incidents_reports#readme
+  readme: README.md
+  keywords: [incidents, events, earthranger, storyboard, case-management]
+  thumbnail: resources/thumbnail.png
+
 requirements:
   - name: ecoscope-platform
     version: ">=2.17.0,<3.0.0"

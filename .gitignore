@@ -223,3 +223,7 @@ Makefile.local
 __diff_output__/
 wt-compiler-env-overrides.toml
 .pixi-workflow-keep
+
+# prepare (compose templates.py) writes these to the repo root
+environment.tar
+metadata.json

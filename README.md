@@ -100,3 +100,7 @@ Snapshots are in `__results_snapshots__/`. `test_otel_traces_success` currently 
 `spec.yaml` takes ext-wd `0.0.14` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
 
 To try unreleased task changes against the compiled workflow, `make build` builds `../wd-partner-tasks` into the local channel `/tmp/ecoscope-workflows-custom/release/artifacts/`; point the spec requirement there temporarily (and add the channel to `pixi.toml`), but don't commit that.
+
+### Ecoscope Web
+
+The `ecoscope-web` branch holds the catalog release, compiled with `pixi run recompile-etd --variant=gcp` (never `compile-etd`, which resets `VERSION.yaml`). A PR merged into it tags `vX.Y.Z` from `VERSION.yaml` and creates the GitHub release. Then run compose's `templates.py prepare` on the tag to attach `environment.tar` and `metadata.json`, and add the tag to compose's catalog manifest. The catalog card shows `resources/thumbnail.png` (`metadata.thumbnail` in `spec.yaml`). CI runs the test cases with `dev/pytest-cli.sh incident_reports --all`, on the mock-IO data in `mock-io/`.
