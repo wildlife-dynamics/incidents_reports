@@ -53,7 +53,7 @@
             "data": "2.0",
             "id": 2,
             "is_filtered": true,
-            "title": "Events per incident",
+            "title": "Avg. events per incident",
             "widget_type": "stat"
           },
           {

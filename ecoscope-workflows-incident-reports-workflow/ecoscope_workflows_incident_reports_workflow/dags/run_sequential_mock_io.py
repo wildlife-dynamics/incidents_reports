@@ -293,7 +293,6 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
         )
         .partial(
             df=incident_events_csv,
-            filetype="csv",
             filename="incident_events",
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             **(params.get("persist_incident_events") or {}),
@@ -456,7 +455,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            title="Events per incident",
+            title="Avg. events per incident",
             decimal_places=1,
             **(params.get("per_incident_widget") or {}),
         )

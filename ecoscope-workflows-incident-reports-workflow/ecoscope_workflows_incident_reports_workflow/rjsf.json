@@ -279,6 +279,45 @@
       "required": [],
       "title": "Base Maps"
     },
+    "Incidents": {
+      "type": "object",
+      "description": "Download the incidents and all of their events.",
+      "ecoscope:task_group": true,
+      "properties": {
+        "persist_incident_events": {
+          "additionalProperties": false,
+          "properties": {
+            "filetype": {
+              "default": "csv",
+              "description": "Choose the file format of the incident events download in the Files tab.",
+              "enum": [
+                "csv",
+                "parquet"
+              ],
+              "title": "Download format",
+              "type": "string",
+              "enumNames": [
+                "CSV",
+                "Parquet"
+              ],
+              "oneOf": [
+                {
+                  "const": "csv",
+                  "title": "CSV"
+                },
+                {
+                  "const": "parquet",
+                  "title": "Parquet"
+                }
+              ]
+            }
+          },
+          "required": [],
+          "type": "object",
+          "title": ""
+        }
+      }
+    },
     "Map": {
       "type": "object",
       "description": "",
@@ -567,6 +606,7 @@
       "time_range",
       "groupers",
       "base_maps",
+      "Incidents",
       "Map",
       "Incident Reports Table"
     ],

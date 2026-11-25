@@ -285,6 +285,28 @@
       "required": [],
       "title": "Base Maps"
     },
+    "persist_incident_events": {
+      "additionalProperties": false,
+      "properties": {
+        "filetype": {
+          "default": "csv",
+          "description": "The output format",
+          "enum": [
+            "csv",
+            "gpkg",
+            "geoparquet",
+            "parquet",
+            "geojson",
+            "json"
+          ],
+          "title": "Filetype",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": ""
+    },
     "events_map": {
       "additionalProperties": false,
       "properties": {
@@ -485,6 +507,7 @@
       "time_range",
       "groupers",
       "base_maps",
+      "persist_incident_events",
       "events_map",
       "reports_table"
     ]

@@ -62,6 +62,16 @@ rjsf-overrides:
     Incident Reports Table.properties.reports_table.properties.show_icons.title: Show event icons in the table
     Incident Reports Table.properties.reports_table.properties.show_icons.description: ""
 
+    # Only CSV and Parquet: persist_df also offers gpkg/geoparquet, not asked for.
+    Incidents.properties.persist_incident_events.properties.filetype.title: Download format
+    Incidents.properties.persist_incident_events.properties.filetype.description: >-
+      Choose the file format of the incident events download in the Files tab.
+    Incidents.properties.persist_incident_events.properties.filetype.enum: [csv, parquet]
+    Incidents.properties.persist_incident_events.properties.filetype.enumNames: [CSV, Parquet]
+    Incidents.properties.persist_incident_events.properties.filetype.oneOf:
+      - {const: csv, title: CSV}
+      - {const: parquet, title: Parquet}
+
   $defs:
     ValueGrouper.properties.index_name.oneOf:
       - const: incident
@@ -139,7 +149,7 @@ workflow:
         partial:
           df: ${{ workflow.events_local_time.return }}
 
-      # the CSV leaves out the icon images (a data URI on every row) and colours
+      # the download leaves out the icon images (a data URI on every row) and colours
       - id: incident_events_csv
         task: map_columns
         partial:
@@ -154,7 +164,6 @@ workflow:
         task: persist_df
         partial:
           df: ${{ workflow.incident_events_csv.return }}
-          filetype: csv
           filename: incident_events
           root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
 
@@ -236,7 +245,7 @@ workflow:
           conditions:
             - never
         partial:
-          title: Events per incident
+          title: Avg. events per incident
           decimal_places: 1
         map:
           argnames: [view, data]
