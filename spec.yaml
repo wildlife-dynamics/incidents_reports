@@ -51,14 +51,10 @@ metadata:
 
 requirements:
   - name: ecoscope-platform
-    version: ">=2.17.0,<3.0.0"
+    version: ">=2.39.4,<3.0.0"
     channel: https://repo.prefix.dev/ecoscope-workflows/
 
-  - name: ecoscope-workflows-ext-custom
-    version: "0.1.2"
-    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
-
-  # ext-custom requires pydeck==0.9.2, which is only on conda-forge — pinned
+  # ecoscope-platform requires pydeck==0.9.2, which is only on conda-forge — pinned
   # explicitly so strict channel priority can resolve it.
   - name: pydeck
     version: 0.9.2
@@ -66,7 +62,7 @@ requirements:
 
   # wd-partner-tasks: src/ecoscope-workflows-ext-wd (incident tasks: _incidents.py).
   - name: ecoscope-workflows-ext-wd
-    version: "0.0.14"
+    version: "0.0.19"
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
 rjsf-overrides:
@@ -173,7 +169,7 @@ workflow:
     description: Download the incidents and all of their events.
     tasks:
       - id: incident_events
-        task: get_incident_events
+        task: ecoscope_workflows_ext_wd.tasks.get_incident_events
         partial:
           client: ${{ workflow.er_client.return }}
           time_range: ${{ workflow.time_range.return }}
@@ -514,9 +510,20 @@ workflow:
     description: ""
     tasks:
       - id: storyboards
-        task: format_incident_storyboards
+        task: draw_incident_storyboard
+        # all set here so the form doesn't change; type_color keeps the colours of the other widgets
+        partial:
+          group_column: incident
+          group_time_column: incident_time
+          time_column: time
+          type_column: event_type_display
+          id_column: serial_number
+          icon_column: icon
+          color_column: type_color
+          palette: null
+          merge_window_hours: 12
         mapvalues:
-          argnames: df
+          argnames: dataframe
           argvalues: ${{ workflow.incidents_split.return }}
 
       - id: storyboards_html
