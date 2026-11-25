@@ -39,7 +39,7 @@ metadata:
     - name: Incident events table
       type: file
       description: >-
-        incident_events.csv, one row per event with its incident.
+        The incident events as CSV and/or Parquet, one row per event with its incident.
       indicators:
         - name: Incidents
   license: BSD-3-Clause
@@ -110,6 +110,16 @@ rjsf-overrides:
       - {const: updated, title: Last updated}
     Incident Reports Table.properties.reports_table.properties.show_icons.title: Show event icons in the table
     Incident Reports Table.properties.reports_table.properties.show_icons.description: ""
+
+    # As in wt-download-events: filetypes is a multi-select whose own title renders as a
+    # large subhead; " " blanks it ("" would show the raw key), so the card title labels it.
+    persist_incident_events.properties.filetypes.title: " "
+    persist_incident_events.properties.filetypes.default: ["csv"]
+    persist_incident_events.properties.filetypes.items.enum: ["csv", "parquet"]
+    persist_incident_events.properties.filetypes.description: >-
+      Choose one or more file formats for the incident events download in the Files
+      tab. Parquet files are compact, fast to query, and keep all your data in a single
+      file. Works with Python, R, QGIS, and other GIS tools.
 
   $defs:
     ValueGrouper.properties.index_name.oneOf:
@@ -188,7 +198,7 @@ workflow:
         partial:
           df: ${{ workflow.events_local_time.return }}
 
-      # the CSV leaves out the icon images (a data URI on every row) and colours
+      # the download leaves out the icon images (a data URI on every row) and colours
       - id: incident_events_csv
         task: map_columns
         partial:
@@ -198,14 +208,6 @@ workflow:
           rename_columns: {}
           raise_if_not_found: false
           duplicate_strategy: suffix
-
-      - id: persist_incident_events
-        task: persist_df
-        partial:
-          df: ${{ workflow.incident_events_csv.return }}
-          filetype: csv
-          filename: incident_events
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
 
       - id: incidents_split
         task: split_groups
@@ -285,7 +287,7 @@ workflow:
           conditions:
             - never
         partial:
-          title: Events per incident
+          title: Avg. events per incident
           decimal_places: 1
         map:
           argnames: [view, data]
@@ -582,6 +584,15 @@ workflow:
             - never
         partial:
           widgets: ${{ workflow.reports_table_widget.return }}
+
+  - name: Download File Format
+    id: persist_incident_events
+    task: persist_df_wrapper
+    partial:
+      df: ${{ workflow.incident_events_csv.return }}
+      filename_prefix: incident_events
+      root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+      sanitize: true
 
   - id: events_csv_file
     task: create_files_single_view
