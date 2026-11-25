@@ -65,7 +65,7 @@
             "data": "1.0",
             "id": 2,
             "is_filtered": true,
-            "title": "Events per incident",
+            "title": "Avg. events per incident",
             "widget_type": "stat"
           },
           {
@@ -151,7 +151,7 @@
             "data": "4.0",
             "id": 2,
             "is_filtered": true,
-            "title": "Events per incident",
+            "title": "Avg. events per incident",
             "widget_type": "stat"
           },
           {
@@ -237,7 +237,7 @@
             "data": "1.0",
             "id": 2,
             "is_filtered": true,
-            "title": "Events per incident",
+            "title": "Avg. events per incident",
             "widget_type": "stat"
           },
           {
@@ -323,7 +323,7 @@
             "data": "2.0",
             "id": 2,
             "is_filtered": true,
-            "title": "Events per incident",
+            "title": "Avg. events per incident",
             "widget_type": "stat"
           },
           {
