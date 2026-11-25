@@ -279,45 +279,6 @@
       "required": [],
       "title": "Base Maps"
     },
-    "Incidents": {
-      "type": "object",
-      "description": "Download the incidents and all of their events.",
-      "ecoscope:task_group": true,
-      "properties": {
-        "persist_incident_events": {
-          "additionalProperties": false,
-          "properties": {
-            "filetype": {
-              "default": "csv",
-              "description": "Choose the file format of the incident events download in the Files tab.",
-              "enum": [
-                "csv",
-                "parquet"
-              ],
-              "title": "Download format",
-              "type": "string",
-              "enumNames": [
-                "CSV",
-                "Parquet"
-              ],
-              "oneOf": [
-                {
-                  "const": "csv",
-                  "title": "CSV"
-                },
-                {
-                  "const": "parquet",
-                  "title": "Parquet"
-                }
-              ]
-            }
-          },
-          "required": [],
-          "type": "object",
-          "title": ""
-        }
-      }
-    },
     "Map": {
       "type": "object",
       "description": "",
@@ -447,6 +408,30 @@
           "title": ""
         }
       }
+    },
+    "persist_incident_events": {
+      "additionalProperties": false,
+      "properties": {
+        "filetypes": {
+          "default": [
+            "csv"
+          ],
+          "description": "Choose one or more file formats for the incident events download in the Files tab. Parquet files are compact, fast to query, and keep all your data in a single file. Works with Python, R, QGIS, and other GIS tools.",
+          "items": {
+            "enum": [
+              "csv",
+              "parquet"
+            ],
+            "type": "string"
+          },
+          "title": " ",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Download File Format"
     }
   },
   "$defs": {
@@ -606,9 +591,9 @@
       "time_range",
       "groupers",
       "base_maps",
-      "Incidents",
       "Map",
-      "Incident Reports Table"
+      "Incident Reports Table",
+      "persist_incident_events"
     ],
     "groupers": {
       "groupers": {

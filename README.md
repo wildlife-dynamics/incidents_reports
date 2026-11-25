@@ -22,7 +22,7 @@ Nothing in it is partner-specific. You pick the data source and time range, and 
 
 Every event type has its own colour, the same in every widget (most frequent type first; 16 set colours, then generated ones). All widgets, including the map's legend and scale bar, share the storyboards' font and text colours.
 
-Also written to the results folder: `incident_events.csv` (or `.parquet`, see **Download format**), one row per event with its incident, listed in the desktop app's **Files** tab.
+Also written to the results folder: `incident_events_<hash>.csv` and/or `.parquet` (see **Download File Format**), one row per event with its incident, listed in the desktop app's **Files** tab.
 
 ## Parameters
 
@@ -35,7 +35,7 @@ Also written to the results folder: `incident_events.csv` (or `.parquet`, see **
 | Show event icons on the map | Checkbox, ticked by default: ER event icons; unticked: points coloured by event type |
 | Default Columns | Reports-table columns shown before the viewer changes them |
 | Show event icons in the table | ER event icons in the reports table on/off |
-| Download format | File format of `incident_events`: **CSV** (default) or **Parquet** |
+| Download File Format | One or more of **CSV** (ticked by default) and **Parquet** for the incident events download |
 
 ## How it works
 
@@ -43,7 +43,7 @@ Also written to the results folder: `incident_events.csv` (or `.parquet`, see **
 set_base_maps
 get_incident_events            incidents in the range → their events by id (nested incidents followed),
                                display names, category, process_events_details, icons as data URIs
-  → convert_values_to_timezone → assign_event_type_colors → persist_df (incident_events.csv / .parquet)
+  → convert_values_to_timezone → assign_event_type_colors → persist_df_wrapper (incident_events_<hash>.csv / .parquet)
   → split_groups (Incident, or AllGrouper)
       ├─ dataframe_column_nunique / events_per_incident → single-value widgets ─┐
       ├─ draw_incident_events_map → map widget                                   │ merge_widget_views
