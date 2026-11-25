@@ -408,6 +408,30 @@
           "title": ""
         }
       }
+    },
+    "persist_incident_events": {
+      "additionalProperties": false,
+      "properties": {
+        "filetypes": {
+          "default": [
+            "csv"
+          ],
+          "description": "Choose one or more file formats for the incident events download in the Files tab. Parquet files are compact, fast to query, and keep all your data in a single file. Works with Python, R, QGIS, and other GIS tools.",
+          "items": {
+            "enum": [
+              "csv",
+              "parquet"
+            ],
+            "type": "string"
+          },
+          "title": " ",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Download File Format"
     }
   },
   "$defs": {
@@ -568,7 +592,8 @@
       "groupers",
       "base_maps",
       "Map",
-      "Incident Reports Table"
+      "Incident Reports Table",
+      "persist_incident_events"
     ],
     "groupers": {
       "groupers": {
