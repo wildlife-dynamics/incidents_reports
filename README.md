@@ -48,7 +48,7 @@ get_incident_events            incidents in the range → their events by id (ne
       ├─ dataframe_column_nunique / events_per_incident → single-value widgets ─┐
       ├─ draw_incident_events_map → map widget                                   │ merge_widget_views
       ├─ draw_events_by_type_chart / _by_month_chart / draw_incident_sunburst    │
-      └─ format_incident_state_table / _storyboards / _reports_table ────────────┴→ gather_dashboard
+      └─ format_incident_state_table / draw_incident_storyboard / _reports_table─┴→ gather_dashboard
 ```
 
 The new tasks are in [`ecoscope-workflows-ext-wd`](../wd-partner-tasks/src/ecoscope-workflows-ext-wd): `tasks/_incidents.py`, tested in `tests/tasks/test_incidents.py`. The KPI cards use the platform's own tasks (`dataframe_column_nunique`, `create_single_value_widget_single_view`); only `events_per_incident` is new.
@@ -98,6 +98,6 @@ Snapshots are in `__results_snapshots__/`. `test_otel_traces_success` currently 
 
 ### Releasing
 
-`spec.yaml` takes ext-wd `0.0.14` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
+`spec.yaml` takes ext-wd `0.0.19` from `https://repo.prefix.dev/ecoscope-workflows-custom/`. To ship task changes: merge them in wd-partner-tasks, tag `wd-vX.Y.Z` (the Publish action pushes it to prefix.dev), bump the ext-wd `version` in `spec.yaml` and `EXT_VERSION` in the `Makefile`, then run a stock `make recompile` and `make test`. Each stock recompile bumps `VERSION.yaml` (MIN + 1, or MAJ + 1 when the form parameters change).
 
 To try unreleased task changes against the compiled workflow, `make build` builds `../wd-partner-tasks` into the local channel `/tmp/ecoscope-workflows-custom/release/artifacts/`; point the spec requirement there temporarily (and add the channel to `pixi.toml`), but don't commit that.

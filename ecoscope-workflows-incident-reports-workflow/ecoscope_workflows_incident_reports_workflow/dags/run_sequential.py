@@ -27,6 +27,9 @@ from ecoscope.platform.tasks.results import (
 from ecoscope.platform.tasks.results import (
     create_single_value_widget_single_view as create_single_value_widget_single_view,
 )
+from ecoscope.platform.tasks.results import (
+    draw_incident_storyboard as draw_incident_storyboard,
+)
 from ecoscope.platform.tasks.results import gather_dashboard as gather_dashboard
 from ecoscope.platform.tasks.results import merge_widget_views as merge_widget_views
 from ecoscope.platform.tasks.results import set_base_maps as set_base_maps
@@ -61,10 +64,7 @@ from ecoscope_workflows_ext_wd.tasks import (
 from ecoscope_workflows_ext_wd.tasks import (
     format_incident_state_table as format_incident_state_table,
 )
-from ecoscope_workflows_ext_wd.tasks import (
-    format_incident_storyboards as format_incident_storyboards,
-)
-from ecoscope_workflows_ext_wd.tasks import get_incident_events as get_incident_events
+from ecoscope_workflows_ext_wd.tasks import get_incident_events as get_incident_events_1
 from wt_contracts import validate as _validate
 from wt_task import task
 
@@ -178,7 +178,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
     )
 
     incident_events = (
-        task(get_incident_events)
+        task(get_incident_events_1)
         .validate()
         .set_task_instance_id("incident_events")
         .handle_errors()
@@ -855,7 +855,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
     )
 
     storyboards = (
-        task(format_incident_storyboards)
+        task(draw_incident_storyboard)
         .validate()
         .set_task_instance_id("storyboards")
         .handle_errors()
@@ -867,8 +867,19 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             ],
             unpack_depth=1,
         )
-        .partial(**(params.get("storyboards") or {}))
-        .mapvalues(argnames=["df"], argvalues=incidents_split)
+        .partial(
+            group_column="incident",
+            group_time_column="incident_time",
+            time_column="time",
+            type_column="event_type_display",
+            id_column="serial_number",
+            icon_column="icon",
+            color_column="type_color",
+            palette=None,
+            merge_window_hours=12,
+            **(params.get("storyboards") or {}),
+        )
+        .mapvalues(argnames=["dataframe"], argvalues=incidents_split)
     )
 
     storyboards_html = (
