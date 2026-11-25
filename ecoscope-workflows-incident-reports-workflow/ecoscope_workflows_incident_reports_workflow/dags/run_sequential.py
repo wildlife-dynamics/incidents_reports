@@ -12,7 +12,7 @@ from ecoscope.platform.tasks.filter import (
 from ecoscope.platform.tasks.filter import set_time_range as set_time_range
 from ecoscope.platform.tasks.groupby import set_groupers as set_groupers
 from ecoscope.platform.tasks.groupby import split_groups as split_groups
-from ecoscope.platform.tasks.io import persist_df as persist_df
+from ecoscope.platform.tasks.io import persist_df_wrapper as persist_df_wrapper
 from ecoscope.platform.tasks.io import persist_text as persist_text
 from ecoscope.platform.tasks.io import set_er_connection as set_er_connection
 from ecoscope.platform.tasks.results import (
@@ -259,28 +259,6 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             raise_if_not_found=False,
             duplicate_strategy="suffix",
             **(params.get("incident_events_csv") or {}),
-        )
-        .call()
-    )
-
-    persist_incident_events = (
-        task(persist_df)
-        .validate()
-        .set_task_instance_id("persist_incident_events")
-        .handle_errors()
-        .with_tracing()
-        .skipif(
-            conditions=[
-                any_is_empty_df,
-                any_dependency_skipped,
-            ],
-            unpack_depth=1,
-        )
-        .partial(
-            df=incident_events_csv,
-            filename="incident_events",
-            root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
-            **(params.get("persist_incident_events") or {}),
         )
         .call()
     )
@@ -1016,6 +994,29 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
         )
         .partial(
             widgets=reports_table_widget, **(params.get("reports_table_merged") or {})
+        )
+        .call()
+    )
+
+    persist_incident_events = (
+        task(persist_df_wrapper)
+        .validate()
+        .set_task_instance_id("persist_incident_events")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(
+            df=incident_events_csv,
+            filename_prefix="incident_events",
+            root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
+            sanitize=True,
+            **(params.get("persist_incident_events") or {}),
         )
         .call()
     )

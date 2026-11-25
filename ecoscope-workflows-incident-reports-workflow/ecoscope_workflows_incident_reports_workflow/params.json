@@ -285,28 +285,6 @@
       "required": [],
       "title": "Base Maps"
     },
-    "persist_incident_events": {
-      "additionalProperties": false,
-      "properties": {
-        "filetype": {
-          "default": "csv",
-          "description": "The output format",
-          "enum": [
-            "csv",
-            "gpkg",
-            "geoparquet",
-            "parquet",
-            "geojson",
-            "json"
-          ],
-          "title": "Filetype",
-          "type": "string"
-        }
-      },
-      "required": [],
-      "type": "object",
-      "title": ""
-    },
     "events_map": {
       "additionalProperties": false,
       "properties": {
@@ -363,6 +341,32 @@
       "required": [],
       "type": "object",
       "title": ""
+    },
+    "persist_incident_events": {
+      "additionalProperties": false,
+      "properties": {
+        "filetypes": {
+          "default": [
+            "csv"
+          ],
+          "description": "The output format",
+          "items": {
+            "enum": [
+              "csv",
+              "gpkg",
+              "geoparquet",
+              "parquet"
+            ],
+            "type": "string"
+          },
+          "title": "Filetypes",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Download File Format"
     }
   },
   "$defs": {
@@ -507,9 +511,9 @@
       "time_range",
       "groupers",
       "base_maps",
-      "persist_incident_events",
       "events_map",
-      "reports_table"
+      "reports_table",
+      "persist_incident_events"
     ]
   },
   "additionalProperties": false
